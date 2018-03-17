@@ -3,9 +3,9 @@ const __ = require('iterate-js');
 module.exports = function(bot, config) {
     bot.config = new __.lib.Config({
         auto: new __.lib.Config({
-            deafen: false,
+            deafen: true,
             pause: false,
-            play: false,
+            play: true,
             reconnect: true
         }),
         command: new __.lib.Config({
@@ -32,8 +32,9 @@ module.exports = function(bot, config) {
         }),
         stream: new __.lib.Config({
             seek: 0,
-            passes: 2, //can be increased to reduce packetloss at the expense of upload bandwidth, 4-5 should be lossless at the expense of 4-5x upload
-            volume: 0.07
+            passes: 5, //can be increased to reduce packetloss at the expense of upload bandwidth, 4-5 should be lossless at the expense of 4-5x upload
+            volume: 0.07,
+            volumeWhileSpeaking: 0.01
         })
     });
     bot.config.update(config);

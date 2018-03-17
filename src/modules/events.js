@@ -45,7 +45,7 @@ module.exports = function(bot) {
             if(bot.online)
                 logger.log('Reconnected.');
             else
-                logger.log('Rhythm Bot Online.');
+                logger.log('Errant Bot Online.');
             bot.online = true;
             bot.manager.clean();
         },
@@ -67,7 +67,7 @@ module.exports = function(bot) {
         guildMemberUpdate: (old, member) => {
             if(member.user.username == bot.client.user.username && member.mute) {
                 member.setMute(false);
-                logger.log('Bot muted....unmuteing');
+                logger.log('Bot muted....unmuting');
             }
         },
 
@@ -84,7 +84,7 @@ module.exports = function(bot) {
                 var track = bot.queue.first;
                 if(track && track.dispatcher) {
                     if(bot.speakers.length > 0)
-                        track.dispatcher.setVolume(0.5);
+                        track.dispatcher.setVolume(bot.config.stream.volumeWhileSpeaking);
                     else
                         track.dispatcher.setVolume(bot.config.stream.volume);
                 }

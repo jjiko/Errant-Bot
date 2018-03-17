@@ -5,10 +5,11 @@ const logger = require('./src/logger.js');
 
 const bot = new RhythmBot({
     command: {
-        symbol: '-' // command symbol trigger
+        symbol: '!' // command symbol trigger
     },
     discord: {
-        token: process.env.DISCORD_TOKEN //,
+        token: process.env.DISCORD_TOKEN, //,
+        join: "music",
         // manage: {
         //     channels: [ 
         //         // Example text channel manager, limits media channel to 5 posts, limit should probably be less than 100 to avoid bugs
@@ -19,7 +20,10 @@ const bot = new RhythmBot({
 });
 
 bot.connect()
-    .then(() => { 
+    .then(() => {
+        logger.log('joining default channel');
+        bot.cmd["join"](bot.config.discord.join);
+
         logger.log('Listening');
         bot.listen();
     })
