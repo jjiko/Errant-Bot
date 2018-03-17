@@ -106,7 +106,8 @@ module.exports = function (bot) {
                 console.dir(results);
                 console.log(results[0].link);
                 if (results.length) {
-                    bot.commands.youtube(results[0].link);
+                    msg.details = results[0].link;
+                    bot.commands.youtube(msg);
                 }
                 else {
                     msg.channel.sendMessage(`:thumbsdown: no results found for search "${msg.details.trim()}"`);
