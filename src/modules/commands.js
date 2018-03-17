@@ -15,11 +15,11 @@ module.exports = function (bot) {
         },
 
         ping: msg => {
-            var phrases = [
+            let phrases = [
                 `Can't stop won't stop!`,
                 `:ping_pong: Pong Bitch!`
             ];
-            var random = (array) => {
+            let random = (array) => {
                 return array[Math.floor(Math.random() * array.length)];
             };
             if (msg.guild)
@@ -29,7 +29,7 @@ module.exports = function (bot) {
 
         join: msg => {
             return new Promise((resolve, reject) => {
-                var voicechannel = msg.member.voiceChannel;
+                let voicechannel = msg.member.voiceChannel;
                 if (voicechannel && voicechannel.type == 'voice') {
                     voicechannel.join()
                         .then(connection => {
@@ -59,14 +59,14 @@ module.exports = function (bot) {
             if (!msg.guild.voiceConnection)
                 return bot.commands.join(msg).then(() => bot.commands.play(msg));
             if (bot.queue.first.playing)
-                return msg.channel.sendMessage('Already playing a song');
+                return msg.channel.sendMessage(':no_entry_sign: Already playing a song');
 
             bot.paused = false;
             bot.jukebox.play(bot.queue.first, msg);
         },
 
         pause: msg => {
-            var track = bot.queue.first;
+            let track = bot.queue.first;
             if (track && track.dispatcher) {
                 bot.queue.first.paused = true;
                 track.dispatcher.pause();
@@ -75,7 +75,7 @@ module.exports = function (bot) {
         },
 
         resume: msg => {
-            var track = bot.queue.first;
+            let track = bot.queue.first;
             if (track && track.dispatcher) {
                 bot.queue.first.paused = false;
                 track.dispatcher.resume();
@@ -144,7 +144,7 @@ module.exports = function (bot) {
         },
 
         enqueue: msg => {
-            var parts = msg.details.split(':'),
+            let parts = msg.details.split(':'),
                 type = parts.shift().trim(),
                 search = parts.join(':').trim();
 
@@ -178,7 +178,7 @@ module.exports = function (bot) {
         },
 
         dequeue: msg => {
-            var songidx = msg.details.trim();
+            let songidx = msg.details.trim();
             if (songidx != '') {
                 songidx = parseInt(songidx) - 1;
                 if (songidx == 0) {
@@ -191,7 +191,7 @@ module.exports = function (bot) {
         },
 
         skip: msg => {
-            var track = bot.queue.first;
+            let track = bot.queue.first;
             if (track && track.dispatcher && msg && msg.channel) {
                 track.dispatcher.end();
                 msg.channel.sendMessage(`:fast_forward: "${track.title}" skipped`);
@@ -199,7 +199,7 @@ module.exports = function (bot) {
         },
 
         stop: msg => {
-            var track = bot.queue.first;
+            let track = bot.queue.first;
             if (track && track.dispatcher && msg && msg.channel) {
                 track.playing = false;
                 track.dispatcher.end();

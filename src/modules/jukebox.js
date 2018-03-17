@@ -6,12 +6,12 @@ const spotify = require('../services/spotify.js');
 const infohandlers = {
 
     spotify: function(search, cb) {
-        var uri = search.split(':')[1];
+        let uri = search.split(':')[1];
         spotify.getInfo(uri, cb);
     },
 
     youtube: function(search, cb) {
-        var url = search.contains('://') ? search : 'https://www.youtube.com/watch?v=' + search;
+        let url = search.contains('://') ? search : 'https://www.youtube.com/watch?v=' + search;
         youtube.getInfo(url, cb);
     }
 
@@ -20,12 +20,12 @@ const infohandlers = {
 const handlers = {
 
     spotify: function(bot, msg, track) {
-        var uri = track.search.split(':')[1];
+        let uri = track.search.split(':')[1];
         track.dispatcher = msg.guild.voiceConnection.playStream(spotify(bot, uri), bot.config.stream);
     },
 
     youtube: function(bot, msg, track) {
-        var url = track.search.contains('://') ? track.search : 'https://www.youtube.com/watch?v=' + track.search;
+        let url = track.search.contains('://') ? track.search : 'https://www.youtube.com/watch?v=' + track.search;
         track.dispatcher = msg.guild.voiceConnection.playStream(youtube(url, { audioonly: true }), bot.config.stream);
     }
 
@@ -36,10 +36,10 @@ module.exports = function(bot) {
         play: function(track, msg) {
             if(bot.config.queue.announce) {
                 if(track.title)
-                    msg.channel.sendMessage(`:musical_note: Now playing: "${track.title}", Requested by: ${track.requestor}`);
+                    msg.channel.sendMessage(`*Playing* :musical_note: \`${track.title}\` *Requested by ${track.requestor}*`);
             }
             track.playing = true;
-            var handler = handlers[track.type];
+            let handler = handlers[track.type];
             if(handler) {
                 handler(bot, msg, track);
                 if(track.dispatcher) {
@@ -62,14 +62,14 @@ module.exports = function(bot) {
                     });
                 }
             } else
-                msg.channel.sendMessage(`Improper track type: "${track.type}"`);
+                msg.channel.sendMessage(`:no_entry_sign: Improper track type: "${track.type}"`);
         },
         info: function(track, msg, cb) {
             var handler = infohandlers[track.type];
             if(handler)
                 handler(track.search, cb);
             else
-                msg.channel.sendMessage(`Improper track type: "${track.type}"`);
+                msg.channel.sendMessage(`:no_entry_sign: Improper track type: "${track.type}"`);
         }
     };
 };
