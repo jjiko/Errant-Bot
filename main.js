@@ -21,9 +21,6 @@ const bot = new RhythmBot({
 
 bot.connect()
     .then(() => {
-        logger.log('joining default channel');
-        bot.cmd["join"](bot.config.discord.join);
-
         logger.log('Listening');
         bot.listen();
     })
