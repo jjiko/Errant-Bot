@@ -93,14 +93,14 @@ module.exports = function (bot) {
         },
 
         search: msg => {
-            console.log(`Searching for.. ${msg}`);
-            
+            console.log(`Searching for.. ${msg.details.trim()}`);
+
             let opts = {
                 maxResults: 1,
                 key: process.env.YOUTUBE_KEY
             };
 
-            search(msg, opts, function (err, results) {
+            search(msg.details.trim(), opts, function (err, results) {
                 if (err) return console.log(err);
 
                 console.dir(results);
