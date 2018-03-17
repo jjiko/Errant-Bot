@@ -93,6 +93,8 @@ module.exports = function (bot) {
         },
 
         search: msg => {
+            console.log(`Searching for.. ${msg}`);
+            
             let opts = {
                 maxResults: 1,
                 key: process.env.YOUTUBE_KEY
