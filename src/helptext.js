@@ -47,9 +47,7 @@ module.exports = {
             let arr = x.split(":");
             let name = arr[0];
             arr.shift();
-            let value = arr.join(" ");
-
-            let text = x.replace("{PRE}", symbol);
+            let value = arr.join(" ").replace("{PRE}", symbol);
             return {
                 "name": `\`${name}\``,
                 "value": value.trim(),

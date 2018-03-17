@@ -12,8 +12,7 @@ module.exports = function (bot) {
 
         help: msg => {
             let helpTextEmbed = helpText.get(bot.config.command.symbol, bot.client.user.username, bot.client.user.avatarUrl);
-            console.log(helpTextEmbed);
-            msg.channel.send(helpTextEmbed);
+            msg.channel.sendEmbed(helpTextEmbed);
         },
 
         ping: msg => {
@@ -292,7 +291,7 @@ module.exports = function (bot) {
                     }
                 },
                 list: () => {
-                    var playlists = bot.playlist.list();
+                    let playlists = bot.playlist.list();
                     playlists = __.map(playlists, (x, y) => '{0}. {1}'.format(y + 1, x));
                     msg.channel.sendMessage(playlists.length > 0 ? playlists.join('\n') : 'There are no saved playlists');
                 }
