@@ -97,7 +97,8 @@ module.exports = function (bot) {
 
             let opts = {
                 maxResults: 1,
-                key: process.env.YOUTUBE_KEY
+                key: process.env.YOUTUBE_KEY,
+                type: "video"
             };
 
             search(msg.details.trim(), opts, function (err, results) {
