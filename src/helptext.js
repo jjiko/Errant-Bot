@@ -62,7 +62,7 @@ module.exports = {
            "name": ":hash: Channel",
            "value": ""
         });
-        __all(channel, function (x) {
+        __.all(channel, function (x) {
             formattedHelpText.fields.push(formatField(x));
         });
 
@@ -70,7 +70,7 @@ module.exports = {
             "name": ":musical_note: Playback",
             "value": ""
         });
-        __all(playback, function (x) {
+        __.all(playback, function (x) {
             formattedHelpText.fields.push(formatField(x));
         });
 
@@ -78,7 +78,7 @@ module.exports = {
             "name": ":1234: Queue/Playlist",
             "value": ""
         });
-        __all(queue, function (x) {
+        __.all(queue, function (x) {
             formattedHelpText.fields.push(formatField(x));
         });
 
@@ -86,7 +86,7 @@ module.exports = {
             "name": ":heavy_plus_sign: More",
             "value": ""
         });
-        __all(more, function (x) {
+        __.all(more, function (x) {
             formattedHelpText.fields.push(formatField(x));
         });
 
