@@ -22,6 +22,7 @@ const bot = new RhythmBot({
 bot.connect()
     .then(() => {
         logger.log('Listening');
+        logger.log(JSON.stringify(bot));
         bot.listen();
     })
     .catch(err => {

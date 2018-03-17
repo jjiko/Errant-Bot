@@ -1,4 +1,3 @@
-
 const __ = require('iterate-js');
 const moment = require('moment');
 const helpText = require('../helptext.js');
@@ -6,8 +5,9 @@ const songtypes = [
     //'spotify',
     'youtube'
 ];
+const search = require('youtube-search');
 
-module.exports = function(bot) {
+module.exports = function (bot) {
     bot.commands = {
 
         help: msg => {
@@ -15,14 +15,14 @@ module.exports = function(bot) {
         },
 
         ping: msg => {
-            var phrases = [ 
-                `Can't stop won't stop!`, 
-                `:ping_pong: Pong Bitch!` 
+            var phrases = [
+                `Can't stop won't stop!`,
+                `:ping_pong: Pong Bitch!`
             ];
             var random = (array) => {
                 return array[Math.floor(Math.random() * array.length)];
             };
-            if(msg.guild)
+            if (msg.guild)
                 phrases = phrases.concat(msg.guild.emojis.array());
             msg.channel.sendMessage(random(phrases));
         },
@@ -30,11 +30,11 @@ module.exports = function(bot) {
         join: msg => {
             return new Promise((resolve, reject) => {
                 var voicechannel = msg.member.voiceChannel;
-                if(voicechannel && voicechannel.type == 'voice') {
+                if (voicechannel && voicechannel.type == 'voice') {
                     voicechannel.join()
                         .then(connection => {
                             bot.speakers = [];
-                            if(bot.config.auto.play)
+                            if (bot.config.auto.play)
                                 bot.commands.play(msg);
                             resolve(connection);
                             msg.channel.sendMessage(`:speaking_head: Joined channel: ${voicechannel.name}`);
@@ -48,26 +48,26 @@ module.exports = function(bot) {
             bot.commands.stop();
             bot.client.voiceConnections.every(connection => {
                 connection.disconnect();
-                msg.channel.sendMessage(`:mute: Disconnecting from channel: ${connection.channel.name}`); 
+                msg.channel.sendMessage(`:mute: Disconnecting from channel: ${connection.channel.name}`);
             });
-            
+
         },
 
         play: msg => {
-            if(bot.queue.count == 0)
+            if (bot.queue.count == 0)
                 return msg.channel.sendMessage(msg.trans ? 'Add some songs to the queue first' : 'No remaining songs in the queue');
-            if(!msg.guild.voiceConnection)
+            if (!msg.guild.voiceConnection)
                 return bot.commands.join(msg).then(() => bot.commands.play(msg));
-            if(bot.queue.first.playing)
+            if (bot.queue.first.playing)
                 return msg.channel.sendMessage('Already playing a song');
-            
+
             bot.paused = false;
             bot.jukebox.play(bot.queue.first, msg);
         },
 
         pause: msg => {
             var track = bot.queue.first;
-            if(track && track.dispatcher) {
+            if (track && track.dispatcher) {
                 bot.queue.first.paused = true;
                 track.dispatcher.pause();
                 msg.channel.sendMessage(`:pause_button: "${track.title}" paused`);
@@ -76,7 +76,7 @@ module.exports = function(bot) {
 
         resume: msg => {
             var track = bot.queue.first;
-            if(track && track.dispatcher) {
+            if (track && track.dispatcher) {
                 bot.queue.first.paused = false;
                 track.dispatcher.resume();
                 msg.channel.sendMessage(`:play_pause: "${track.title}" resumed`);
@@ -84,29 +84,42 @@ module.exports = function(bot) {
         },
 
         time: msg => {
-            var track = bot.queue.first;
-            if(track && track.dispatcher) {
-                var time = track.dispatcher.time / 1000;
+            let track = bot.queue.first;
+            if (track && track.dispatcher) {
+                let time = track.dispatcher.time / 1000;
                 msg.channel.sendMessage(':clock2: time: {0} / {1}'
-                .format(moment('00:00:00', 'HH:mm:ss').add(time, 's').format('HH:mm:ss'), track.length));
+                    .format(moment('00:00:00', 'HH:mm:ss').add(time, 's').format('HH:mm:ss'), track.length));
             }
         },
 
-        youtube: msg => {
-            var search = msg.details.trim();
+        search: msg => {
+            let opts = {
+                maxResults: 1,
+                key: process.env.YOUTUBE_KEY
+            };
 
-            var targets = [];
-            if(search[0] == '(' && search[search.length - 1] == ')') {
+            search(msg, opts, function (err, results) {
+                if (err) return console.log(err);
+
+                console.dir(results);
+            })
+        },
+
+        youtube: msg => {
+            let search = msg.details.trim();
+
+            let targets = [];
+            if (search[0] === '(' && search[search.length - 1] === ')') {
                 search = search.replace('(', '').replace(')', '');
                 targets = search.split(',');
             } else
                 targets.push(search);
 
             __.all(targets, target => {
-                var track = { type: 'youtube', search: target.trim(), requestor: msg.author.username };
+                let track = {type: 'youtube', search: target.trim(), requestor: msg.author.username};
                 bot.queue.enqueue(track);
                 bot.jukebox.info(track, msg, (err, info) => {
-                    if(info) {
+                    if (info) {
                         track.title = info ? info.title : 'Song';
                         track.length = moment('00:00:00', 'HH:mm:ss').add(parseInt(info.length_seconds), 's').format('HH:mm:ss');
                     }
@@ -123,20 +136,20 @@ module.exports = function(bot) {
             var parts = msg.details.split(':'),
                 type = parts.shift().trim(),
                 search = parts.join(':').trim();
-                
-            if(parts.length > 0 && songtypes.indexOf(type) > -1) {
+
+            if (parts.length > 0 && songtypes.indexOf(type) > -1) {
                 var targets = [];
-                if(search[0] == '(' && search[search.length - 1] == ')') {
+                if (search[0] == '(' && search[search.length - 1] == ')') {
                     search = search.replace('(', '').replace(')', '');
                     targets = search.split(',');
                 } else
                     targets.push(search);
-                
+
                 __.all(targets, target => {
-                    var track = { type: type, search: target.trim(), requestor: msg.author.username };
+                    var track = {type: type, search: target.trim(), requestor: msg.author.username};
                     bot.queue.enqueue(track);
                     bot.jukebox.info(track, msg, (err, info) => {
-                        if(info) {
+                        if (info) {
                             track.title = info ? info.title : 'Song';
                             track.length = moment('00:00:00', 'HH:mm:ss').add(parseInt(info.length_seconds), 's').format('HH:mm:ss');
                         }
@@ -155,9 +168,9 @@ module.exports = function(bot) {
 
         dequeue: msg => {
             var songidx = msg.details.trim();
-            if(songidx != '') {
+            if (songidx != '') {
                 songidx = parseInt(songidx) - 1;
-                if(songidx == 0) {
+                if (songidx == 0) {
                     bot.commands.stop(msg);
                 }
                 var track = bot.queue.at(songidx);
@@ -168,7 +181,7 @@ module.exports = function(bot) {
 
         skip: msg => {
             var track = bot.queue.first;
-            if(track && track.dispatcher && msg && msg.channel) {
+            if (track && track.dispatcher && msg && msg.channel) {
                 track.dispatcher.end();
                 msg.channel.sendMessage(`:fast_forward: "${track.title}" skipped`);
             }
@@ -176,7 +189,7 @@ module.exports = function(bot) {
 
         stop: msg => {
             var track = bot.queue.first;
-            if(track && track.dispatcher && msg && msg.channel) {
+            if (track && track.dispatcher && msg && msg.channel) {
                 track.playing = false;
                 track.dispatcher.end();
                 bot.paused = false;
@@ -185,8 +198,8 @@ module.exports = function(bot) {
         },
 
         list: msg => {
-            var list = __.map(bot.queue.list, (track, idx) => `${idx + 1}. Type: "${track.type}" Title: "${track.title}${track.requestor ? ` Requested By: ${track.requestor}`:''}"`);
-            if(list.length > 0)
+            var list = __.map(bot.queue.list, (track, idx) => `${idx + 1}. Type: "${track.type}" Title: "${track.title}${track.requestor ? ` Requested By: ${track.requestor}` : ''}"`);
+            if (list.length > 0)
                 msg.channel.sendMessage(list.join('\n'));
             else
                 msg.channel.sendMessage(':cd: There are no songs in the queue.');
@@ -202,12 +215,12 @@ module.exports = function(bot) {
             var parts = msg.details.split(' '),
                 current = parts[0],
                 target = null;
-            if(current && current != '') {
+            if (current && current != '') {
                 current = parseInt(current) - 1;
                 var track = bot.queue.at(current);
                 target = parts[1].contains('up', true) ? current - 1 : (parts[1].contains('down', true) ? current + 1 : -1);
-                if(target >= 0 && target <= bot.queue.count - 1) {
-                    if(current == 0 || target == 0)
+                if (target >= 0 && target <= bot.queue.count - 1) {
+                    if (current == 0 || target == 0)
                         bot.commands.stop(msg);
                     bot.queue.move(current, target);
                     msg.channel.sendMessage(`:arrow_${target > current ? 'down' : 'up'}: Track: ${track.title} Moved to #${target + 1}`);
@@ -223,12 +236,12 @@ module.exports = function(bot) {
 
         volume: msg => {
             var volume = msg.details.trim();
-            if(volume != '') {
+            if (volume != '') {
                 volume = __.math.between(parseInt(volume), 0, 100);
                 volume = (volume / 100) * (2 - 0.5) + 0.5;
 
                 var track = bot.queue.first;
-                if(track && track.dispatcher)
+                if (track && track.dispatcher)
                     track.dispatcher.setVolume(volume);
                 bot.config.stream.volume = volume;
                 msg.channel.sendMessage(`:speaker: Volume set to ${volume * 100}%`);
@@ -247,20 +260,20 @@ module.exports = function(bot) {
                 operation = parts[1];
             __.switch(action, {
                 save: () => {
-                    if(operation != undefined) {
+                    if (operation != undefined) {
                         bot.playlist.save(operation);
                         msg.channel.sendMessage(`Playlist: "${operation}" has been saved`);
                     }
                 },
                 load: () => {
-                    if(operation != undefined) {
+                    if (operation != undefined) {
                         bot.commands.stop(msg);
                         bot.playlist.load(operation);
                         msg.channel.sendMessage(`Playlist: "${operation}" has been loaded`);
                     }
                 },
                 delete: () => {
-                    if(operation != undefined) {
+                    if (operation != undefined) {
                         bot.playlist.delete(operation);
                         msg.channel.sendMessage(`Playlist: "${operation}" has been deleted`);
                     }
