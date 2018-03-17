@@ -3,9 +3,9 @@ const __ = require('iterate-js');
 module.exports = function(bot, config) {
     bot.config = new __.lib.Config({
         auto: new __.lib.Config({
-            deafen: true,
+            deafen: false,
             pause: false,
-            play: true,
+            play: false,
             reconnect: true
         }),
         command: new __.lib.Config({
@@ -19,7 +19,7 @@ module.exports = function(bot, config) {
             })
         }),
         defaults: new __.lib.Config({
-            
+
         }),
         queue: new __.lib.Config({
             announce: true,
