@@ -104,6 +104,13 @@ module.exports = function (bot) {
                 if (err) return console.log(err);
 
                 console.dir(results);
+                console.log(results[0].link);
+                if (results.length) {
+                    bot.commands.youtube(results[0].link);
+                }
+                else {
+                    msg.channel.sendMessage(`:thumbsdown: no results found for search "${msg.details.trim()}"`);
+                }
             })
         },
 
