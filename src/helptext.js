@@ -26,7 +26,6 @@ const queue = [
     '{PRE}list: "List all songs in the queue"',
     '{PRE}playlist [save/load/delete/list][playlist name]: Ex: `{PRE}playlist save:Calamity`   Ex: `{PRE}playlist load:Calamity`'
 ];
-
 const more = [
     '{PRE}ping: "Check if the bot is online"',
 ];
@@ -44,14 +43,14 @@ module.exports = {
             fields: []
         };
 
-        let formatField = function(x) {
+        let formatField = function (x) {
             let arr = x.split(":");
             let name = arr[0];
             arr.shift();
             let value = arr.join(" ");
 
             let text = x.replace("{PRE}", symbol);
-            let field = {
+            return {
                 "name": `\`${name}\``,
                 "value": value.trim(),
                 "inline": true
@@ -59,8 +58,8 @@ module.exports = {
         };
 
         formattedHelpText.fields.push({
-           "name": ":hash: Channel",
-           "value": ""
+            "name": ":hash: Channel",
+            "value": ""
         });
         __.all(channel, function (x) {
             formattedHelpText.fields.push(formatField(x));
