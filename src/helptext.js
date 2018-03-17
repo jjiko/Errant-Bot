@@ -36,11 +36,11 @@ module.exports = {
             embed: {
                 color: "8135FF",
                 author: username,
-                icon_url: avatarUrl
-            },
-            title: "Errant Bot :question: Help",
-            description: "Use `!more` for commands not listed here",
-            fields: []
+                icon_url: avatarUrl,
+                title: "Errant Bot :question: Help",
+                description: "Use `!more` for commands not listed here",
+                fields: []
+            }
         };
 
         let formatField = function (x) {
@@ -55,36 +55,36 @@ module.exports = {
             };
         };
 
-        formattedHelpText.fields.push({
+        formattedHelpText.embed.fields.push({
             "name": ":hash: Channel",
             "value": ""
         });
         __.all(channel, function (x) {
-            formattedHelpText.fields.push(formatField(x));
+            formattedHelpText.embed.fields.push(formatField(x));
         });
 
-        formattedHelpText.fields.push({
+        formattedHelpText.embed.fields.push({
             "name": ":musical_note: Playback",
             "value": ""
         });
         __.all(playback, function (x) {
-            formattedHelpText.fields.push(formatField(x));
+            formattedHelpText.embed.fields.push(formatField(x));
         });
 
-        formattedHelpText.fields.push({
+        formattedHelpText.embed.fields.push({
             "name": ":1234: Queue/Playlist",
             "value": ""
         });
         __.all(queue, function (x) {
-            formattedHelpText.fields.push(formatField(x));
+            formattedHelpText.embed.fields.push(formatField(x));
         });
 
-        formattedHelpText.fields.push({
+        formattedHelpText.embed.fields.push({
             "name": ":heavy_plus_sign: More",
             "value": ""
         });
         __.all(more, function (x) {
-            formattedHelpText.fields.push(formatField(x));
+            formattedHelpText.embed.fields.push(formatField(x));
         });
 
         return formattedHelpText;
