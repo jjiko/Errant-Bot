@@ -11,7 +11,9 @@ module.exports = function (bot) {
     bot.commands = {
 
         help: msg => {
-            msg.channel.send(helpText.get(bot.config.command.symbol, bot.client.user.username, bot.client.user.avatarUrl));
+            let helpTextObj = helpText.get(bot.config.command.symbol, bot.client.user.username, bot.client.user.avatarUrl);
+            console.log(helpTextObj);
+            //msg.channel.send();
         },
 
         ping: msg => {
@@ -149,7 +151,7 @@ module.exports = function (bot) {
                 search = parts.join(':').trim();
 
             if (parts.length > 0 && songtypes.indexOf(type) > -1) {
-                var targets = [];
+                let targets = [];
                 if (search[0] == '(' && search[search.length - 1] == ')') {
                     search = search.replace('(', '').replace(')', '');
                     targets = search.split(',');
@@ -157,7 +159,7 @@ module.exports = function (bot) {
                     targets.push(search);
 
                 __.all(targets, target => {
-                    var track = {type: type, search: target.trim(), requestor: msg.author.username};
+                    let track = {type: type, search: target.trim(), requestor: msg.author.username};
                     bot.queue.enqueue(track);
                     bot.jukebox.info(track, msg, (err, info) => {
                         if (info) {
@@ -184,7 +186,7 @@ module.exports = function (bot) {
                 if (songidx == 0) {
                     bot.commands.stop(msg);
                 }
-                var track = bot.queue.at(songidx);
+                let track = bot.queue.at(songidx);
                 msg.channel.sendMessage(`:heavy_minus_sign: Dequeued: ${track.title}`);
                 bot.queue.remove((track, idx) => idx == songidx);
             }
@@ -209,7 +211,7 @@ module.exports = function (bot) {
         },
 
         list: msg => {
-            var list = __.map(bot.queue.list, (track, idx) => `${idx + 1}. Type: "${track.type}" Title: "${track.title}${track.requestor ? ` Requested By: ${track.requestor}` : ''}"`);
+            let list = __.map(bot.queue.list, (track, idx) => `${idx + 1}. Type: "${track.type}" Title: "${track.title}${track.requestor ? ` Requested By: ${track.requestor}` : ''}"`);
             if (list.length > 0)
                 msg.channel.sendMessage(list.join('\n'));
             else
@@ -223,12 +225,12 @@ module.exports = function (bot) {
         },
 
         move: msg => {
-            var parts = msg.details.split(' '),
+            let parts = msg.details.split(' '),
                 current = parts[0],
                 target = null;
             if (current && current != '') {
                 current = parseInt(current) - 1;
-                var track = bot.queue.at(current);
+                let track = bot.queue.at(current);
                 target = parts[1].contains('up', true) ? current - 1 : (parts[1].contains('down', true) ? current + 1 : -1);
                 if (target >= 0 && target <= bot.queue.count - 1) {
                     if (current == 0 || target == 0)
@@ -246,12 +248,12 @@ module.exports = function (bot) {
         },
 
         volume: msg => {
-            var volume = msg.details.trim();
+            let volume = msg.details.trim();
             if (volume != '') {
                 volume = __.math.between(parseInt(volume), 0, 100);
                 volume = (volume / 100) * (2 - 0.5) + 0.5;
 
-                var track = bot.queue.first;
+                let track = bot.queue.first;
                 if (track && track.dispatcher)
                     track.dispatcher.setVolume(volume);
                 bot.config.stream.volume = volume;
@@ -266,7 +268,7 @@ module.exports = function (bot) {
         },
 
         playlist: msg => {
-            var parts = msg.details.split(':'),
+            let parts = msg.details.split(':'),
                 action = parts[0].toLowerCase(),
                 operation = parts[1];
             __.switch(action, {
