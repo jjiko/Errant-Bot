@@ -12,6 +12,7 @@ module.exports = function (bot) {
 
         help: msg => {
             let helpTextEmbed = helpText.get(bot.config.command.symbol, bot.client.user.username, bot.client.user.avatarUrl);
+            console.log(helpTextEmbed);
             msg.channel.send(helpTextEmbed);
         },
 
