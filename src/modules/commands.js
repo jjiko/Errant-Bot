@@ -11,9 +11,8 @@ module.exports = function (bot) {
     bot.commands = {
 
         help: msg => {
-            let helpTextObj = helpText.get(bot.config.command.symbol, bot.client.user.username, bot.client.user.avatarUrl);
-            console.log(helpTextObj);
-            //msg.channel.send();
+            let helpTextEmbed = helpText.get(bot.config.command.symbol, bot.client.user.username, bot.client.user.avatarUrl);
+            msg.channel.send(helpTextEmbed);
         },
 
         ping: msg => {
