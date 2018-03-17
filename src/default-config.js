@@ -33,7 +33,7 @@ module.exports = function(bot, config) {
         stream: new __.lib.Config({
             seek: 0,
             passes: 2, //can be increased to reduce packetloss at the expense of upload bandwidth, 4-5 should be lossless at the expense of 4-5x upload
-            volume: 0.5
+            volume: 0.07
         })
     });
     bot.config.update(config);

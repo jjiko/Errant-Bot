@@ -1,3 +1,4 @@
+require('dotenv').load();
 
 const RhythmBot = require('./src/rhythm-bot.js');
 const logger = require('./src/logger.js');
@@ -7,7 +8,7 @@ const bot = new RhythmBot({
         symbol: '-' // command symbol trigger
     },
     discord: {
-        token: '<BOT-TOKEN-HERE>'//,
+        token: process.env.DISCORD_TOKEN //,
         // manage: {
         //     channels: [ 
         //         // Example text channel manager, limits media channel to 5 posts, limit should probably be less than 100 to avoid bugs

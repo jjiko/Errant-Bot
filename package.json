@@ -11,14 +11,19 @@
   "license": "ISC",
   "dependencies": {
     "discord.js": "^10.0.1",
+    "dotenv": "^5.0.1",
+    "ffmpeg-binaries": "^3.2.2-3",
+    "g": "^2.0.1",
     "iterate-js": "^1.0.29",
     "jsonfile": "^2.4.0",
     "moment": "^2.19.4",
     "node-opus": "^0.2.4",
+    "opusscript": "0.0.1",
+    "pm2": "^2.10.1",
     "spotify-web-api-node": "^2.3.6",
     "superagent": "^3.8.2",
     "superagent-jsonapify": "^1.4.2",
     "through2": "^2.0.3",
-    "ytdl-core": "^0.7.24"
+    "ytdl-core": "^0.20.2"
   }
 }
