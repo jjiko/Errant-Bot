@@ -4,7 +4,7 @@ const moment = require('moment');
 const logger = require('../logger.js');
 
 module.exports = function(bot) {
-    var STATE = __.enum({
+    let STATE = __.enum({
         READY: 0,
         PLAYING: 1,
         PAUSED: 2
@@ -13,13 +13,13 @@ module.exports = function(bot) {
     bot.clock = new __.lib.StopWatch({
         onTick: (time) => {
             if(bot.online) {
-                var track = bot.queue.first,
+                let track = bot.queue.first,
                     title = '',
                     currentTime = 0,
                     totalTime = 0;
 
                 if(track && track.dispatcher) {
-                    var time = track.dispatcher.time / 1000,
+                    let time = track.dispatcher.time / 1000,
                         format = 'mm:ss',
                         end = moment(track.length, 'HH:mm:ss');
 
@@ -39,13 +39,13 @@ module.exports = function(bot) {
                 } else
                     bot.state = STATE.READY;
 
-                var text = __.switch(bot.state, {
+                let text = __.switch(bot.state, {
                     [STATE.READY]: `Ready: ${bot.queue.count} in queue.`,
                     [STATE.PLAYING]: `${currentTime}/${totalTime}`,
                     [STATE.PAUSED]: `Paused: ${title} - ${currentTime} / ${totalTime}`
                 });
 
-                if(__.prop(bot.client, 'user.presence.game.name') != text) {
+                if(__.prop(bot.client, 'user.presence.game.name') !== text) {
                     logger.log(`Status: ${text}`);
                     bot.client.user.setGame(text);
                 }

@@ -11,7 +11,7 @@ module.exports = function (bot) {
     bot.commands = {
 
         help: msg => {
-            msg.channel.send(helpText.get(bot.config.command.symbol, bot.client));
+            msg.channel.send(helpText.get(bot.config.command.symbol, bot.client.user.username, bot.client.user.avatarUrl));
         },
 
         ping: msg => {

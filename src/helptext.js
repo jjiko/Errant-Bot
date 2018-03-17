@@ -31,12 +31,12 @@ const more = [
 ];
 
 module.exports = {
-    get: function (symbol, client) {
+    get: function (symbol, username, avatarUrl) {
         let formattedHelpText = {
             embed: {
                 color: "8135FF",
-                author: client.user.username,
-                icon_url: client.user.avatarUrl
+                author: username,
+                icon_url: avatarUrl
             },
             title: "Errant Bot :question: Help",
             description: "Use `!more` for commands not listed here",
