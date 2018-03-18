@@ -13,7 +13,7 @@ const logger = {
         console.error(msg);
     },
     write: (type, msg) => {
-        fs.appendFile('rhythm-bot-log.log', `(${moment().format()}) [${type.toUpperCase()}]: ${msg}\r\n`, function(err) {
+        fs.appendFile('errant-bot-log.log', `(${moment().format()}) [${type.toUpperCase()}]: ${msg}\r\n`, function(err) {
             if(err) throw err;
         });
     }
