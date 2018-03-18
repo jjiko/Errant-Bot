@@ -97,7 +97,7 @@ module.exports = function (bot) {
                 let track = bot.queue.first;
                 if (track && track.dispatcher) {
                     if (bot.speakers.length > 0)
-                        track.dispatcher.setVolume(bot.config.stream.volumeWhileSpeaking);
+                        track.dispatcher.setVolume(bot.config.stream.volume * bot.config.stream.volumeWhileSpeaking);
                     else
                         t = setTimeout(function(){
                             track.dispatcher.setVolume(bot.config.stream.volume);
