@@ -53,9 +53,9 @@ module.exports = function (bot) {
                 bot.client.guilds.every(function(snowflake, guild) {
                     console.log(guild.name, guild.id);
 
-                    guild.channels.every(function(snowflake, channel) {
-                        console.log(channel.name, channel.id);
-                    })
+                    // guild.channels.every(function(snowflake, channel) {
+                    //     console.log(channel.name, channel.id);
+                    // })
                 });
             }
         },
