@@ -49,22 +49,22 @@ module.exports = {
             embed.addField(`\`${name}\``, value.trim().replace(/{PRE}/g, symbol), true);
         };
 
-        embed.addField(":hash: Channel", "");
+        embed.addField(":hash:", "*Channel commands*");
         __.all(channel, function (x) {
             addField(x)
         });
 
-        embed.addField(":musical_note: Playback", "");
+        embed.addField(":musical_note:", "*Playback commands*");
         __.all(playback, function (x) {
             addField(x)
         });
 
-        embed.addField(":1234: Queue/Playlist", "");
+        embed.addField(":1234:", "*Queue/Playlist commands*");
         __.all(queue, function (x) {
             addField(x)
         });
 
-        embed.addField(":heavy_plus_sign: More", "");
+        embed.addField(":heavy_plus_sign:", "*More commands*");
         __.all(more, function (x) {
             addField(x)
         });
