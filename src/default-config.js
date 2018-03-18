@@ -1,6 +1,6 @@
 const __ = require('iterate-js');
 
-module.exports = function(bot, config) {
+module.exports = function (bot, config) {
     bot.config = new __.lib.Config({
         auto: new __.lib.Config({
             deafen: true,
@@ -18,9 +18,7 @@ module.exports = function(bot, config) {
                 channels: []
             })
         }),
-        defaults: new __.lib.Config({
-
-        }),
+        defaults: new __.lib.Config({}),
         queue: new __.lib.Config({
             announce: true,
             repeat: false
@@ -34,6 +32,7 @@ module.exports = function(bot, config) {
             seek: 0,
             passes: 5, //can be increased to reduce packetloss at the expense of upload bandwidth, 4-5 should be lossless at the expense of 4-5x upload
             volume: 0.07,
+            volumeBase: 0.07,
             volumeWhileSpeaking: 0.04
         })
     });

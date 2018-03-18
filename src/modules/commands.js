@@ -254,7 +254,7 @@ module.exports = function (bot) {
             let volume = msg.details.trim();
             if (volume !== '') {
                 volume = __.math.between(parseInt(volume), 0, 100);
-                volume = (volume / 100) * (1.5) + bot.config.stream.volume;
+                volume = (volume / 100) * (1.5) + bot.config.stream.volumeBase;
 
                 let track = bot.queue.first;
                 if (track && track.dispatcher)
