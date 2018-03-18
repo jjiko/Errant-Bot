@@ -39,7 +39,7 @@ module.exports = {
                 author: username,
                 icon_url: avatarUrl,
                 title: "Errant Bot :question: Help",
-                description: "Use `!more` for commands not listed here",
+                description: `Use \`${symbol}more\` for commands not listed here`,
                 fields: []
             }
         };
@@ -48,7 +48,7 @@ module.exports = {
             let arr = x.split(":");
             let name = arr[0];
             arr.shift();
-            let value = arr.join(" ").replace("{PRE}", symbol);
+            let value = arr.join(" ").replace(/{PRE}/g, symbol);
             return {
                 "name": `\`${name}\``,
                 "value": value.trim(),
