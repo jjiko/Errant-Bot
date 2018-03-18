@@ -82,6 +82,9 @@ module.exports = function (bot) {
         },
 
         guildMemberSpeaking: (member, isSpeaking) => {
+            let t = 0;
+            clearTimeout(t);
+
             if (isSpeaking)
                 bot.speakers.push(member.id);
             else {
@@ -96,7 +99,10 @@ module.exports = function (bot) {
                     if (bot.speakers.length > 0)
                         track.dispatcher.setVolume(bot.config.stream.volumeWhileSpeaking);
                     else
-                        track.dispatcher.setVolume(bot.config.stream.volume);
+                        t = setTimeout(function(){
+                            track.dispatcher.setVolume(bot.config.stream.volume);
+                        }, 3000);
+
                 }
             }
         }
