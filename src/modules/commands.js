@@ -1,5 +1,6 @@
 const __ = require('iterate-js');
 const moment = require('moment');
+const logger = require('../logger.js');
 const helpText = require('../helptext.js');
 const songtypes = [
     //'spotify',
@@ -12,7 +13,7 @@ module.exports = function (bot) {
 
         help: msg => {
             let helpTextEmbed = helpText.get(bot.config.command.symbol, msg.author.username, msg.author.avatarURL);
-            msg.channel.send("", helpTextEmbed).then(console.log);
+            msg.channel.send("", helpTextEmbed).then(logger.log);
         },
 
         ping: msg => {
