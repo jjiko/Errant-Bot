@@ -34,7 +34,7 @@ module.exports = {
     get: function (symbol, username, avatarUrl) {
         let formattedHelpText = {
             embed: {
-                color: "8135FF",
+                color: "8467967",
                 author: username,
                 icon_url: avatarUrl,
                 title: "Errant Bot :question: Help",
