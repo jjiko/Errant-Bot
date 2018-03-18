@@ -32,62 +32,43 @@ const more = [
 ];
 
 module.exports = {
-    get: function (symbol, username, avatarUrl) {
-        let formattedHelpText = {
-            embed: {
-                color: "8467967",
-                author: username,
-                icon_url: avatarUrl,
-                title: "Errant Bot :question: Help",
-                description: `Use \`${symbol}more\` for commands not listed here`,
-                fields: []
-            }
-        };
+    get: function (symbol = "!", username, avatarUrl) {
+        const embed = new Discord.RichEmbed();
 
-        let formatField = function (x) {
+        embed.setTitle("Errant Bot :question: Help");
+        embed.setColor(8467967);
+        embed.setAuthor(username, avatarUrl);
+        embed.setDescription(`Use \`${symbol}more\` for commands not listed here`);
+
+        let addField = function (x) {
             let arr = x.split(":");
             let name = arr[0];
             arr.shift();
-            let value = arr.join(" ").replace(/{PRE}/g, symbol);
-            return {
-                "name": `\`${name}\``,
-                "value": value.trim(),
-                "inline": true
-            };
+            let value = arr.join(" ");
+
+            embed.addField(`\`${name}\``, value.trim().replace(/{PRE}/g, symbol), true);
         };
 
-        formattedHelpText.embed.fields.push({
-            "name": ":hash: Channel",
-            "value": ""
-        });
+        embed.addField(":hash: Channel", "");
         __.all(channel, function (x) {
-            formattedHelpText.embed.fields.push(formatField(x));
+            addField(x)
         });
 
-        formattedHelpText.embed.fields.push({
-            "name": ":musical_note: Playback",
-            "value": ""
-        });
+        embed.addField(":musical_note: Playback", "");
         __.all(playback, function (x) {
-            formattedHelpText.embed.fields.push(formatField(x));
+            addField(x)
         });
 
-        formattedHelpText.embed.fields.push({
-            "name": ":1234: Queue/Playlist",
-            "value": ""
-        });
+        embed.addField(":1234: Queue/Playlist", "");
         __.all(queue, function (x) {
-            formattedHelpText.embed.fields.push(formatField(x));
+            addField(x)
         });
 
-        formattedHelpText.embed.fields.push({
-            "name": ":heavy_plus_sign: More",
-            "value": ""
-        });
+        embed.addField(":heavy_plus_sign: More", "");
         __.all(more, function (x) {
-            formattedHelpText.embed.fields.push(formatField(x));
+            addField(x)
         });
 
-        return (new Discord.RichEmbed(formattedHelpText.embed));
+        return embed;
     }
 };

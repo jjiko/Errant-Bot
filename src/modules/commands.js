@@ -12,11 +12,11 @@ module.exports = function (bot) {
     bot.commands = {
 
         help: msg => {
-            let helpTextEmbed = helpText.get(bot.config.command.symbol, msg.author.username, msg.author.avatarURL);
+            let embed = helpText.get(bot.config.command.symbol, msg.author.username, msg.author.avatarURL);
             logger.log("Sending help text..");
             logger.log(msg.author.username);
-            logger.log(JSON.stringify(helpTextEmbed));
-            msg.channel.send("", helpTextEmbed).then(logger.log);
+            logger.log(JSON.stringify(embed));
+            msg.channel.send({embed}).then(logger.log);
         },
 
         ping: msg => {
