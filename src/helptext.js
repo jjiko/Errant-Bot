@@ -42,7 +42,7 @@ module.exports = {
 
         let addField = function (x) {
             let arr = x.split(":");
-            let name = arr[0];
+            let name = arr[0].replace(/{PRE}/g, symbol);
             arr.shift();
             let value = arr.join(" ");
 
