@@ -64,10 +64,10 @@ module.exports = {
             addField(x)
         });
 
-        embed.addField(":heavy_plus_sign:", "*More commands*");
-        __.all(more, function (x) {
-            addField(x)
-        });
+        // embed.addField(":heavy_plus_sign:", "*More commands*");
+        // __.all(more, function (x) {
+        //     addField(x)
+        // });
 
         return embed;
     }
