@@ -41,3 +41,6 @@ dev-run.bat
 app.js
 test.js
 .idea
+.env
+package-lock.json
+src/playlists

@@ -12,7 +12,7 @@ module.exports = function (bot) {
         return msg;
     };
 
-    let hasCommand = (content) => content.substring(0, bot.config.command.symbol.length) == bot.config.command.symbol;
+    let hasCommand = (content) => content.substring(0, bot.config.command.symbol.length) === bot.config.command.symbol;
 
     __.all({
         message: msg => {
@@ -65,7 +65,7 @@ module.exports = function (bot) {
         },
 
         guildMemberUpdate: (old, member) => {
-            if (member.user.username == bot.client.user.username && member.mute) {
+            if (member.user.username === bot.client.user.username && member.mute) {
                 member.setMute(false);
                 logger.log('Bot muted....unmuting');
             }

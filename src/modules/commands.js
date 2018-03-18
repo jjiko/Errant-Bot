@@ -11,7 +11,7 @@ module.exports = function (bot) {
     bot.commands = {
 
         help: msg => {
-            let helpTextEmbed = helpText.get(bot.config.command.symbol, bot.client.user.username, bot.client.user.avatarUrl);
+            let helpTextEmbed = helpText.get(bot.config.command.symbol, msg.author.username, msg.author.avatarURL);
             msg.channel.send("", helpTextEmbed).then(console.log);
         },
 
@@ -227,12 +227,12 @@ module.exports = function (bot) {
             let parts = msg.details.split(' '),
                 current = parts[0],
                 target = null;
-            if (current && current != '') {
+            if (current && current !== '') {
                 current = parseInt(current) - 1;
                 let track = bot.queue.at(current);
                 target = parts[1].contains('up', true) ? current - 1 : (parts[1].contains('down', true) ? current + 1 : -1);
                 if (target >= 0 && target <= bot.queue.count - 1) {
-                    if (current == 0 || target == 0)
+                    if (current === 0 || target === 0)
                         bot.commands.stop(msg);
                     bot.queue.move(current, target);
                     msg.channel.sendMessage(`:arrow_${target > current ? 'down' : 'up'}: Track: ${track.title} Moved to #${target + 1}`);
@@ -248,7 +248,7 @@ module.exports = function (bot) {
 
         volume: msg => {
             let volume = msg.details.trim();
-            if (volume != '') {
+            if (volume !== '') {
                 volume = __.math.between(parseInt(volume), 0, 100);
                 volume = (volume / 100) * (2 - 0.5) + 0.5;
 
