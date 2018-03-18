@@ -34,7 +34,7 @@ module.exports = function(bot, config) {
             seek: 0,
             passes: 5, //can be increased to reduce packetloss at the expense of upload bandwidth, 4-5 should be lossless at the expense of 4-5x upload
             volume: 0.07,
-            volumeWhileSpeaking: 0.01
+            volumeWhileSpeaking: 0.04
         })
     });
     bot.config.update(config);
