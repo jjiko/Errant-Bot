@@ -15,7 +15,7 @@ module.exports = function(bot) {
             if(targetguild) {
                 let targetchannel = targetguild.channels.find(c => c.name.contains(channel));
                 if(targetchannel)
-                    targetchannel.sendMessage(text);
+                    targetchannel.send(text);
             }
         },
 

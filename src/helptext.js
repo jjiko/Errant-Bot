@@ -1,4 +1,5 @@
 const __ = require('iterate-js');
+const Discord = require('discord.js');
 const channel = [
     '{PRE}join [channel]: "Join your voice channel"',
     '{PRE}leave: "Leave current voice channel"',
@@ -87,6 +88,6 @@ module.exports = {
             formattedHelpText.embed.fields.push(formatField(x));
         });
 
-        return formattedHelpText;
+        return (new Discord.RichEmbed(formattedHelpText.embed));
     }
 };
