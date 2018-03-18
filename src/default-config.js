@@ -3,9 +3,9 @@ const __ = require('iterate-js');
 module.exports = function(bot, config) {
     bot.config = new __.lib.Config({
         auto: new __.lib.Config({
-            deafen: false,
+            deafen: true,
             pause: false,
-            play: false,
+            play: true,
             reconnect: true
         }),
         command: new __.lib.Config({

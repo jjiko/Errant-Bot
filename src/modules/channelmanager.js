@@ -21,7 +21,7 @@ module.exports = function(bot) {
         cleanChannel: function(config) {
             let cfg = __.options({ name: '', limit: null }, config),
                 channel = bot.client.channels.find('name', cfg.name);
-            if(channel && channel.type == 'text' && !bot.manager.cleaning[cfg.name]) {
+            if(channel && channel.type === 'text' && !bot.manager.cleaning[cfg.name]) {
                 bot.manager.cleaning[cfg.name] = true;
                 channel.fetchMessages({ limit: 100 })
                     .then(() => {

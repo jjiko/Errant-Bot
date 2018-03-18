@@ -48,6 +48,16 @@ module.exports = function (bot) {
                 logger.log('Errant Bot Online.');
             bot.online = true;
             bot.manager.clean();
+
+            if(bot.config.discord.join) {
+                bot.client.guilds.every(function(snowflake, guild) {
+                    console.log(guild.name, guild.id);
+
+                    guild.channels.every(function(snowflake, channel) {
+                        console.log(channel.name, channel.id);
+                    })
+                });
+            }
         },
 
         reconnecting: () => {

@@ -35,7 +35,7 @@ module.exports = function (bot) {
         join: msg => {
             return new Promise((resolve, reject) => {
                 let voicechannel = msg.member.voiceChannel;
-                if (voicechannel && voicechannel.type == 'voice') {
+                if (voicechannel && voicechannel.type === 'voice') {
                     voicechannel.join()
                         .then(connection => {
                             bot.speakers = [];
