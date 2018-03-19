@@ -5,11 +5,11 @@ const logger = require('./src/logger.js');
 
 const bot = new RhythmBot({
     command: {
-        symbol: '!' // command symbol trigger
+        symbol: '*' // command symbol trigger
     },
     discord: {
         token: process.env.DISCORD_TOKEN, //,
-        join: "music",
+        join: "music"
         // manage: {
         //     channels: [ 
         //         // Example text channel manager, limits media channel to 5 posts, limit should probably be less than 100 to avoid bugs
@@ -23,7 +23,36 @@ bot.connect()
     .then(() => {
         logger.log('Listening');
         bot.listen();
+        process.send('ready');
     })
     .catch(err => {
         logger.error(err);
     });
+
+let interruptCount = 0;
+process.on('SIGINT', async () => {
+    interruptCount++;
+    if (interruptCount === 1) {
+        logger.log('Received interrupt signal; destroying client and exiting...');
+        await Promise.all([
+            bot.client.destroy()
+        ]).catch(err => {
+            logger.error(err);
+        });
+        process.exit(0);
+    } else {
+        logger.log('Received another interrupt signal; immediately exiting.');
+        process.exit(0);
+    }
+});
+
+process.on('message', function (msg) {
+    if (msg === 'shutdown') {
+        console.log("Closing all connections...");
+        bot.disconnect();
+        setTimeout(function () {
+            console.log("Finished closing connections?");
+            process.exit(0);
+        }, 1500)
+    }
+});

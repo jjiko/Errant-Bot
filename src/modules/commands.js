@@ -1,4 +1,5 @@
 const __ = require('iterate-js');
+const Discord = require('discord.js');
 const moment = require('moment');
 const logger = require('../logger.js');
 const helpText = require('../helptext.js');
@@ -12,11 +13,37 @@ module.exports = function (bot) {
     bot.commands = {
 
         help: msg => {
-            let embed = helpText.get(bot.config.command.symbol, msg.author.username, msg.author.avatarURL);
-            logger.log("Sending help text..");
-            logger.log(msg.author.username);
-            logger.log(JSON.stringify(embed));
-            msg.channel.send({embed}).then(logger.log);
+            let {titles, embeds} = helpText.get(bot.config.command.symbol, msg.author.username, msg.author.avatarURL);
+            let embed = new Discord.RichEmbed();
+            embed.setTitle("Errant Bot :question: Help");
+            embed.setColor(8467967);
+            embed.setAuthor(msg.author.username, msg.author.avatarURL);
+            embed.setDescription(`What commands are you interested in?`);
+            let choices = "";
+            __.all(titles, function (title, i) {
+                let thisTitle = title.split("#");
+                thisTitle = thisTitle.filter(x => x).join(", ");
+                choices += `${i}.   ${thisTitle}\n`;
+            });
+            embed.addField("Respond with the matching number", choices);
+            msg.channel.send({embed})
+                .then(() => {
+                    msg.channel.awaitMessages(response => response.author.id === msg.author.id, {
+                        max: 1,
+                        time: 10000,
+                        errors: ['time'],
+                    })
+                        .then((collected) => {
+                            let i = collected.first().content;
+                            if (!isNaN(i) && typeof(embeds[i]) !== "undefined") {
+                                msg.channel.send({embed: embeds[i]});
+                            }
+                        })
+                        .catch(() => {
+                            // msg.channel.send('There was no collected message that passed the filter within the time limit!');
+                        });
+                });
+
         },
 
         ping: msg => {
@@ -59,7 +86,7 @@ module.exports = function (bot) {
         },
 
         play: msg => {
-            if (bot.queue.count == 0)
+            if (bot.queue.count === 0)
                 return msg.channel.sendMessage(msg.trans ? 'Add some songs to the queue first' : 'No remaining songs in the queue');
             if (!msg.guild.voiceConnection)
                 return bot.commands.join(msg).then(() => bot.commands.play(msg));
@@ -101,19 +128,41 @@ module.exports = function (bot) {
             console.log(`Searching for.. ${msg.details.trim()}`);
 
             let opts = {
-                maxResults: 1,
+                maxResults: 10,
                 key: process.env.YOUTUBE_KEY,
                 type: "video"
             };
 
             search(msg.details.trim(), opts, function (err, results) {
                 if (err) return console.log(err);
-
-                console.dir(results);
-                console.log(results[0].link);
                 if (results.length) {
-                    msg.details = results[0].link;
-                    bot.commands.youtube(msg);
+                    let embed = new Discord.RichEmbed();
+                    embed.setTitle("YouTube search results");
+                    embed.setColor(8467967);
+                    embed.setAuthor(msg.author.username, msg.author.avatarURL);
+                    embed.setDescription(`Select from the list of results`);
+                    __.all(results, function(result, i) {
+                        embed.addField(`${i}.   ${result.title}`, result.description);
+                    });
+
+                    msg.channel.send({embed})
+                        .then(() => {
+                            msg.channel.awaitMessages(response => response.author.id === msg.author.id, {
+                                max: 1,
+                                time: 60000,
+                                errors: ['time'],
+                            })
+                                .then((collected) => {
+                                    let i = collected.first().content;
+                                    if (!isNaN(i) && typeof(results[i]) !== "undefined") {
+                                        msg.details = results[i].link;
+                                        bot.commands.youtube(msg);
+                                    }
+                                })
+                                .catch(() => {
+                                    msg.channel.send('There was no collected message that passed the filter within the time limit!');
+                                });
+                        });
                 }
                 else {
                     msg.channel.sendMessage(`:thumbsdown: no results found for search "${msg.details.trim()}"`);
@@ -155,7 +204,7 @@ module.exports = function (bot) {
 
             if (parts.length > 0 && songtypes.indexOf(type) > -1) {
                 let targets = [];
-                if (search[0] == '(' && search[search.length - 1] == ')') {
+                if (search[0] === '(' && search[search.length - 1] === ')') {
                     search = search.replace('(', '').replace(')', '');
                     targets = search.split(',');
                 } else
