@@ -5,7 +5,7 @@ const logger = require('./src/logger.js');
 
 const bot = new RhythmBot({
     command: {
-        symbol: '*' // command symbol trigger
+        symbol: process.env.SYMBOL // command symbol trigger
     },
     discord: {
         token: process.env.DISCORD_TOKEN, //,
