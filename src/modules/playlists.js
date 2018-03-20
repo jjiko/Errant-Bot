@@ -12,8 +12,8 @@ module.exports = function(bot) {
         },
         dir: '{0}/{1}'.format(bot.dir, playlistPath),
         save: function(name, list) {
-            var list = __.map(list ? list : bot.queue.queue, x => {
-                var temp = {};
+            list = __.map(list ? list : bot.queue.queue, x => {
+                let temp = {};
                 __.all(x, (value, key) => { 
                     if(key != 'dispatcher' && key != 'playing' && key != 'requestor')
                         temp[key] = value; 
@@ -26,9 +26,9 @@ module.exports = function(bot) {
             bot.queue.queue = (jsonfile.readFileSync(bot.playlist.path(name)) || { queue: [] }).queue;
         },
         list: function() {
-            var playlists = [];
+            let playlists = [];
             fs.readdirSync(bot.playlist.dir).forEach(file => {
-                var fileparts = file.split('/'),
+                let fileparts = file.split('/'),
                     filename = fileparts[fileparts.length - 1].replace('.json', '');
                 
                 playlists.push(filename);

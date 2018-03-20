@@ -3,7 +3,7 @@ const Discord = require('discord.js');
 const logger = require('./logger.js');
 const help = [
     {
-        title: [":hash:", "**Channel**"],
+        title: [":hash:", "Channel"],
         commands: [
             '{PRE}join [channel]: "Join your voice channel"',
             '{PRE}leave: "Leave current voice channel"',
@@ -12,7 +12,7 @@ const help = [
         ]
     },
     {
-        title: [":musical_note:", "**Playback**"],
+        title: [":musical_note:", "Playback"],
         commands: [
             '{PRE}play: "Start playing the current song"',
             '{PRE}pause: "Pause the current song"',
@@ -24,22 +24,22 @@ const help = [
         ]
     },
     {
-        title: [":1234:", "**Queue/Playlist**"],
+        title: [":1234:", "Queue/Playlist"],
         commands: [
-            '{PRE}enqueue [type] [url/last fragment]: "Add a song to the end of the queue"',
-            '{PRE}dequeue [index]: "Remove a song from the queue"',
-            '{PRE}add [type] [url/fragment]: "Alias for enqueue"',
-            '{PRE}remove [index]: "Alias for dequeue"',
-            '{PRE}move [index of song] [up/down]: "Move a song up or down in the queue" Ex: `{PRE}move 4 up`',
-            '{PRE}repeat: "Toggle playlist repeat mode"',
-            '{PRE}shuffle: "Shuffle songs in the queue, will stop current song"',
-            '{PRE}clear: "Clear songs in the queue"',
-            '{PRE}list: "List all songs in the queue"',
+            '{PRE}enqueue [type] [url/last fragment]: Add a song to the end of the queue',
+            '{PRE}dequeue [index]: Remove a song from the queue',
+            '{PRE}add [type] [url/fragment]: Alias for enqueue',
+            '{PRE}remove [index]: Alias for dequeue',
+            '{PRE}move [index of song] [up/down]: Move a song up or down in the queue" Ex: `{PRE}move 4 up`',
+            '{PRE}repeat: Toggle playlist repeat mode',
+            '{PRE}shuffle: Shuffle songs in the queue, will stop current song',
+            '{PRE}clear: Clear songs in the queue',
+            '{PRE}list or {PRE}np: List songs in the queue',
             '{PRE}playlist [save/load/delete/list][playlist name]: Ex: `{PRE}playlist save:Calamity`   Ex: `{PRE}playlist load:Calamity`'
         ]
     },
     {
-        title: [":heavy_plus_sign:", "**More commands**"],
+        title: [":heavy_plus_sign:", "More commands"],
         commands: [
             '{PRE}ping: "Check if the bot is online"',
         ]
@@ -83,7 +83,7 @@ module.exports = {
             }
 
             fields++;
-            embed.addField(v.title[0], v.title[1]);
+            embed.addField(v.title[0] + "   " + v.title[1], "---");
             if (typeof(titles[embeds.length]) === "undefined") {
                 titles[embeds.length] = "";
             }

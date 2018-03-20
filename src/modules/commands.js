@@ -23,7 +23,7 @@ module.exports = function (bot) {
             __.all(titles, function (title, i) {
                 let thisTitle = title.split("#");
                 thisTitle = thisTitle.filter(x => x).join(", ");
-                choices += `${i}.   ${thisTitle}\n`;
+                choices += `\`${i}.\`   ${thisTitle}\n`;
             });
             embed.addField("Respond with the matching number", choices);
             msg.channel.send({embed})
@@ -86,12 +86,24 @@ module.exports = function (bot) {
         },
 
         play: msg => {
-            if (bot.queue.count === 0)
-                return msg.channel.sendMessage(msg.trans ? 'Add some songs to the queue first' : 'No remaining songs in the queue');
+            let embed = new Discord.RichEmbed();
+            embed.setColor(8467967);
+            embed.setAuthor(msg.author.username, msg.author.avatarURL);
+
+            if (bot.queue.count === 0) {
+                embed.setTitle(":no_entry_sign:");
+                embed.setDescription(msg.trans ? 'Add some songs to the queue first' : 'No remaining songs in the queue');
+                return msg.channel.send({embed});
+            }
+
             if (!msg.guild.voiceConnection)
                 return bot.commands.join(msg).then(() => bot.commands.play(msg));
-            if (bot.queue.first.playing)
-                return msg.channel.sendMessage(':no_entry_sign: Already playing a song');
+
+            if (bot.queue.first.playing) {
+                embed.setTitle(":no_entry_sign: Already playing a song");
+                embed.setDescription('---');
+                return msg.channel.send({embed});
+            }
 
             bot.paused = false;
             bot.jukebox.play(bot.queue.first, msg);
@@ -102,7 +114,7 @@ module.exports = function (bot) {
             if (track && track.dispatcher) {
                 bot.queue.first.paused = true;
                 track.dispatcher.pause();
-                msg.channel.sendMessage(`:pause_button: "${track.title}" paused`);
+                msg.channel.send(`:pause_button: "${track.title}" paused`);
             }
         },
 
@@ -111,7 +123,7 @@ module.exports = function (bot) {
             if (track && track.dispatcher) {
                 bot.queue.first.paused = false;
                 track.dispatcher.resume();
-                msg.channel.sendMessage(`:play_pause: "${track.title}" resumed`);
+                msg.channel.send(`:play_pause: "${track.title}" resumed`);
             }
         },
 
@@ -119,7 +131,7 @@ module.exports = function (bot) {
             let track = bot.queue.first;
             if (track && track.dispatcher) {
                 let time = track.dispatcher.time / 1000;
-                msg.channel.sendMessage(':clock2: time: {0} / {1}'
+                msg.channel.send(':clock2: time: {0} / {1}'
                     .format(moment('00:00:00', 'HH:mm:ss').add(time, 's').format('HH:mm:ss'), track.length));
             }
         },
@@ -134,15 +146,18 @@ module.exports = function (bot) {
             };
 
             search(msg.details.trim(), opts, function (err, results) {
-                if (err) return console.log(err);
+                if (err) return logger.error(err);
                 if (results.length) {
                     let embed = new Discord.RichEmbed();
                     embed.setTitle("YouTube search results");
                     embed.setColor(8467967);
                     embed.setAuthor(msg.author.username, msg.author.avatarURL);
                     embed.setDescription(`Select from the list of results`);
-                    __.all(results, function(result, i) {
-                        embed.addField(`${i}.   ${result.title}`, result.description);
+                    __.all(results, function (result, i) {
+                        if (!result.description) {
+                            result.description = "No description.";
+                        }
+                        embed.addField(`\`${i}.\`   ${result.title}`, result.description);
                     });
 
                     msg.channel.send({embed})
@@ -165,7 +180,7 @@ module.exports = function (bot) {
                         });
                 }
                 else {
-                    msg.channel.sendMessage(`:thumbsdown: no results found for search "${msg.details.trim()}"`);
+                    msg.channel.send(`:thumbsdown: no results found for search "${msg.details.trim()}"`);
                 }
             })
         },
@@ -188,7 +203,7 @@ module.exports = function (bot) {
                         track.title = info ? info.title : 'Song';
                         track.length = moment('00:00:00', 'HH:mm:ss').add(parseInt(info.length_seconds), 's').format('HH:mm:ss');
                     }
-                    msg.channel.sendMessage(`:heavy_plus_sign: Youtube Enqueued: "${track.title}" @ #${bot.queue.indexOf(track) + 1}`);
+                    msg.channel.send(`:heavy_plus_sign: Youtube Enqueued: "${track.title}" @ #${bot.queue.indexOf(track) + 1}`);
                 });
             });
         },
@@ -218,11 +233,11 @@ module.exports = function (bot) {
                             track.title = info ? info.title : 'Song';
                             track.length = moment('00:00:00', 'HH:mm:ss').add(parseInt(info.length_seconds), 's').format('HH:mm:ss');
                         }
-                        msg.channel.sendMessage(`:heavy_plus_sign: Enqueued: "${track.title}" @ #${bot.queue.indexOf(track) + 1}`);
+                        msg.channel.send(`:heavy_plus_sign: Enqueued: "${track.title}" @ #${bot.queue.indexOf(track) + 1}`);
                     });
                 });
             } else {
-                msg.channel.sendMessage('Invalid Song Format, try: "{0}enqueue youtube:https://www.youtube.com/watch?v=dQw4w9WgXcQ"'
+                msg.channel.send('Invalid Song Format, try: "{0}enqueue youtube:https://www.youtube.com/watch?v=dQw4w9WgXcQ"'
                     .format(bot.config.command.symbol));
             }
         },
@@ -239,7 +254,7 @@ module.exports = function (bot) {
                     bot.commands.stop(msg);
                 }
                 let track = bot.queue.at(songidx);
-                msg.channel.sendMessage(`:heavy_minus_sign: Dequeued: ${track.title}`);
+                msg.channel.send(`:heavy_minus_sign: Dequeued: ${track.title}`);
                 bot.queue.remove((track, idx) => idx == songidx);
             }
         },
@@ -258,22 +273,41 @@ module.exports = function (bot) {
                 track.playing = false;
                 track.dispatcher.end();
                 bot.paused = false;
-                msg.channel.sendMessage(`:stop_button: "${track.title}" stopped`);
+                msg.channel.send(`:stop_button: "${track.title}" stopped`);
             }
         },
 
+        // @alias list
+        np: msg => {
+            bot.commands.list(msg);
+        },
+
+        // Display now playing & queued songs
         list: msg => {
-            let list = __.map(bot.queue.list, (track, idx) => `${idx + 1}. Type: "${track.type}" Title: "${track.title}${track.requestor ? ` Requested By: ${track.requestor}` : ''}"`);
-            if (list.length > 0)
-                msg.channel.sendMessage(list.join('\n'));
-            else
-                msg.channel.sendMessage(':cd: There are no songs in the queue.');
+            let embed = new Discord.RichEmbed();
+            embed.setTitle("Queue");
+            embed.setColor(8467967);
+            embed.setAuthor(msg.author.username, msg.author.avatarURL);
+            embed.setDescription(`__**Now Playing**__
+*${bot.queue.first.title}* 
+    Requested by: \`${bot.queue.first.requestor}\`
+            `);
+
+            // track.type
+            let list = __.map(bot.queue.list, (track, idx) => `\`${idx + 1}.\` *${track.title}* ${track.requestor ? ` Requested by \`${track.requestor}\`` : ''}`);
+            if (list.length > 0) {
+                embed.addField("Up Next", list.join('\n'));
+                msg.channel.send({embed});
+            }
+            else {
+                msg.channel.send(':cd: There are no songs in the queue.');
+            }
         },
 
         clear: msg => {
             bot.commands.stop(msg);
             bot.queue.clear();
-            msg.channel.sendMessage(':cd: Playlist Cleared');
+            msg.channel.send(':cd: Playlist Cleared');
         },
 
         move: msg => {
@@ -345,7 +379,7 @@ module.exports = function (bot) {
                 },
                 list: () => {
                     let playlists = bot.playlist.list();
-                    playlists = __.map(playlists, (x, y) => '{0}. {1}'.format(y + 1, x));
+                    playlists = __.map(playlists, (x, y) => '`{0}.` {1}'.format(y + 1, x));
                     msg.channel.sendMessage(playlists.length > 0 ? playlists.join('\n') : 'There are no saved playlists');
                 }
             });

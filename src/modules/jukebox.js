@@ -46,8 +46,9 @@ module.exports = function(bot) {
                     track.dispatcher.on('end', () => {
                         if(track.playing) {
                             track.playing = false;
-                            var lasttrack = bot.queue.dequeue();
+                            let lasttrack = bot.queue.dequeue();
                             if(bot.config.queue.repeat)
+                                bot.queue.lastTrack = lasttrack;
                                 bot.queue.enqueue(lasttrack);
                             msg.trans = true;
                             bot.commands.play(msg);

@@ -43,12 +43,12 @@ module.exports = __.class(function() {
         this.queue = [];
     },
     remove: function(func) {
-        var key = __.search(this.queue, func, { getKey: true });
+        let key = __.search(this.queue, func, { getKey: true });
         if(__.is.set(key))
             this.queue.splice(key, 1);
     },
     shuffle: function() {
-        var currentIndex = this.queue.length, 
+        let currentIndex = this.queue.length,
         temporaryValue, 
         randomIndex;
 
