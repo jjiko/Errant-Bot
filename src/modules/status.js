@@ -47,7 +47,9 @@ module.exports = function(bot) {
 
                 if(__.prop(bot.client, 'user.presence.game.name') !== text) {
                     logger.log(`Status: ${text}`);
-                    bot.client.user.setActivity(text);
+                    bot.client.user.setActivity(text)
+                        .then(presence => logger.log(`Activity set to ${presence.game ? presence.game.name : 'none'}`))
+                        .catch(logger.error);
                 }
             }
         },

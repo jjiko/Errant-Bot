@@ -66,7 +66,7 @@ module.exports = function(bot) {
                 msg.channel.sendMessage(`:no_entry_sign: Improper track type: "${track.type}"`);
         },
         info: function(track, msg, cb) {
-            var handler = infohandlers[track.type];
+            let handler = infohandlers[track.type];
             if(handler)
                 handler(track.search, cb);
             else

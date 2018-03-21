@@ -7,6 +7,16 @@ const bot = new RhythmBot({
     command: {
         symbol: process.env.SYMBOL // command symbol trigger
     },
+    // @todo move to database
+    twitch: {
+        watch: [{
+            channel: "jjiko",
+            discord: {
+                guild: "Errant Nights",
+                channel: "streaming"
+            }
+        }]
+    },
     discord: {
         token: process.env.DISCORD_TOKEN, //,
         join: "music"
@@ -23,6 +33,9 @@ bot.connect()
     .then(() => {
         logger.log('Listening');
         bot.listen();
+        bot.twitch.listen();
+
+        // Done
         process.send('ready');
     })
     .catch(err => {
@@ -35,6 +48,7 @@ process.on('SIGINT', async () => {
     if (interruptCount === 1) {
         logger.log('Received interrupt signal; destroying client and exiting...');
         await Promise.all([
+            bot.twitch.destroy(),
             bot.client.destroy()
         ]).catch(err => {
             logger.error(err);
@@ -49,6 +63,7 @@ process.on('SIGINT', async () => {
 process.on('message', function (msg) {
     if (msg === 'shutdown') {
         console.log("Closing all connections...");
+        bot.twitch.destroy();
         bot.disconnect();
         setTimeout(function () {
             console.log("Finished closing connections?");
