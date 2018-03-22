@@ -24,6 +24,7 @@
     "node-twitchbot": "^2.0.5",
     "opusscript": "0.0.6",
     "pm2": "^2.10.1",
+    "request": "^2.85.0",
     "spotify-web-api-node": "^2.5.0",
     "superagent": "^3.8.2",
     "superagent-jsonapify": "^1.4.5",

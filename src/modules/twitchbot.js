@@ -15,7 +15,7 @@ module.exports = function (bot) {
             this.bot = new TwitchBot({
                 username: process.env.TWITCH_BOT_USER,
                 oauth: process.env.TWITCH_BOT_OAUTH,
-                channels: ['jjiko', 'vashton', 'warkidnitrous']
+                channels: ['jjiko', 'vashton']
             });
 
             // Connect Twitch bot
@@ -64,7 +64,7 @@ module.exports = function (bot) {
                             embed.setURL(`https://www.twitch.tv/${chatter.channel.replace("#", "")}`);
                             embed.setThumbnail(guild.iconURL);
 
-                            if (chatter.badges.broadcaster === 1) {
+                            if (chatter.hasOwnProperty("badges") && chatter.badges.broadcaster === 1) {
                                 embed.setAuthor(chatter.username, "https://cdn.joejiko.com/img/discord/winner.png");
                                 embed.setColor(8467967); // purple
                             }
