@@ -170,8 +170,57 @@ module.exports = function (bot) {
         config: msg => {
             if (msg.meta.length > 2) {
                 if (msg.meta[1] === "stream") {
-                    let [command, category, action, value] = msg.meta;
-                    logger.log(`${command} ${category} ${action} ${value}`);
+                    let [command, category, action, twitch_channel] = msg.meta;
+
+                    if (action === "add" && twitch_channel) {
+
+                        let channels = [];
+                        let channelChoices = "";
+                        msg.guild.channels.forEach(function (channel, id) {
+                            if (channel.type === "text") {
+                                channels.push({id, name: channel.name});
+                                channelChoices += `\`${channels.length - 1}.\`    ${channel.name}\n`;
+                            }
+                        });
+
+                        const embed = new Discord.RichEmbed();
+                        embed.setTitle("Choose a channel");
+                        embed.setColor(8467967);
+                        embed.setAuthor(msg.guild.me.user.username, msg.guild.me.user.avatarURL);
+                        embed.setDescription(`Chat from your twitch channel \`${twitch_channel}\` will be sent here\n\n${channelChoices}`);
+
+                        msg.channel.send({embed}).then(() => {
+                            msg.channel.awaitMessages(response => response.author.id === msg.author.id, {
+                                max: 1,
+                                time: 300000,
+                                errors: ['time']
+                            })
+                                .then((collected) => {
+                                    let i = collected.first().content;
+                                    if (!isNaN(i) && typeof(channels[i]) !== "undefined") {
+                                        // @todo check for duplicate entries... uhh
+                                        let option = new bot.models.options({
+                                            type: 'guild',
+                                            related_id: msg.guild.id,
+                                            option_name: "stream_chat_channel",
+                                            option_label: twitch_channel,
+                                            option_value: channels[i].id
+                                        });
+                                        option.save()
+                                            .then(function (model) {
+                                                msg.channel.send(`OK. Your twitch chat will get copied to \`${channels[i].name}\` (${channels[i].id})`);
+                                                logger.log(`Option saved with name ${model.get('option_name')}, guild ${model.get('related_id')}`);
+                                            })
+                                            .catch(err => {
+                                                logger.error(err);
+                                            });
+                                    }
+                                })
+                                .catch(() => {
+                                    // msg.channel.send('There was no collected message that passed the filter within the time limit!');
+                                });
+                        });
+                    }
                 }
             }
             logger.log("Config meta: " + JSON.stringify(msg.meta));

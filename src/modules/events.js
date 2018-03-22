@@ -4,6 +4,22 @@ const logger = require('../logger.js');
 module.exports = function (bot) {
     bot.speakers = [];
 
+    let parseReply = (msg) => {
+        msg.meta = msg.content.split(' ');
+        let x = msg.meta.slice();
+        msg.target = x.shift().replace("@", '');
+        msg.details = x.join(' ');
+        return msg;
+    };
+
+    let parseStreamReply = (msg) => {
+        msg.meta = msg.content.split(' ');
+        let x = msg.meta.slice();
+        msg.target = x.shift().replace("@#", '');
+        msg.details = x.join(' ');
+        return msg;
+    };
+
     let parseMsg = (msg) => {
         msg.meta = msg.content.split(' ');
         let x = msg.meta.slice();
@@ -13,6 +29,8 @@ module.exports = function (bot) {
     };
 
     let hasCommand = (content) => content.substring(0, bot.config.command.symbol.length) === bot.config.command.symbol;
+    let hasReply = (content) => content.substring(0, 1) === "@";
+    let hasStreamReply = (content) => content.substring(0, 2) === "@#";
 
     __.all({
         message: msg => {
@@ -23,6 +41,18 @@ module.exports = function (bot) {
                     msg.author.username,
                     msg.content
                 ));
+            if (msg.content && hasStreamReply(msg.content)) {
+                try {
+                    // @todo set command based on channel
+                    let data = parseStreamReply(msg),
+                        cmd = bot.commands.stream.reply;
+                    if (__.is.function(cmd))
+                        cmd(data);
+                } catch (e) {
+                    logger.error(e);
+                }
+            }
+
             if (msg.content && hasCommand(msg.content)) {
                 try {
                     let data = parseMsg(msg),
@@ -142,7 +172,7 @@ Thanks for adding me to your guild!
         guildMemberAdd: (member) => {
             bot.conn
                 .insert({
-                    dId: member.id,
+                    user_id: member.id,
                     username: member.user.username,
                     avatar: member.user.avatarURL
                 })

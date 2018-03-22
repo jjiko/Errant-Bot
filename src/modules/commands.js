@@ -1,5 +1,6 @@
 const __ = require('iterate-js');
 const Discord = require('discord.js');
+const moment = require('moment');
 
 module.exports = function (bot) {
 
@@ -42,12 +43,12 @@ module.exports = function (bot) {
             embed.setAuthor(msg.author.username, msg.author.avatarURL);
             embed.setDescription(`Bot's status in the world`);
 
-            embed.addField("Ping", msg.client.ping, true);
-            embed.addField("Uptime", msg.client.uptime, true);
+            embed.addField("Ping", Math.round(msg.client.ping), true);
+            embed.addField("Uptime", moment.duration(msg.client.uptime, "seconds").humanize(), true);
             embed.addField("Guilds", msg.client.guilds.size, true);
             embed.addField("Text", (msg.client.channels.size - msg.client.voiceConnections.size), true);
             embed.addField("Voice", msg.client.voiceConnections.size, true);
-            embed.addField("Total", msg.client.channels.size, true)
+            embed.addField("Total", msg.client.channels.size, true);
 
             msg.channel.send({embed});
         },
