@@ -15,7 +15,7 @@ module.exports = function(bot) {
             list = __.map(list ? list : bot.queue.queue, x => {
                 let temp = {};
                 __.all(x, (value, key) => { 
-                    if(key != 'dispatcher' && key != 'playing' && key != 'requestor')
+                    if(key !== 'dispatcher' && key !== 'playing' && key !== 'requestor')
                         temp[key] = value; 
                 });
                 return temp;

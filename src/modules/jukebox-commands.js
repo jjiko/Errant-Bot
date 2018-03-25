@@ -173,9 +173,9 @@ module.exports = function (bot) {
 
         dequeue: msg => {
             let songidx = msg.details.trim();
-            if (songidx != '') {
+            if (songidx !== '') {
                 songidx = parseInt(songidx) - 1;
-                if (songidx == 0) {
+                if (songidx === 0) {
                     bot.commands.stop(msg);
                 }
                 let track = bot.queue.at(songidx);
@@ -284,20 +284,20 @@ module.exports = function (bot) {
                 operation = parts[1];
             __.switch(action, {
                 save: () => {
-                    if (operation != undefined) {
+                    if (operation !== undefined) {
                         bot.playlist.save(operation);
                         msg.channel.send(`Playlist: "${operation}" has been saved`);
                     }
                 },
                 load: () => {
-                    if (operation != undefined) {
+                    if (operation !== undefined) {
                         bot.commands.stop(msg);
                         bot.playlist.load(operation);
                         msg.channel.send(`Playlist: "${operation}" has been loaded`);
                     }
                 },
                 delete: () => {
-                    if (operation != undefined) {
+                    if (operation !== undefined) {
                         bot.playlist.delete(operation);
                         msg.channel.send(`Playlist: "${operation}" has been deleted`);
                     }

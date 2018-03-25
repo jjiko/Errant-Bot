@@ -64,9 +64,11 @@ module.exports = function (bot) {
                             embed.setURL(`https://www.twitch.tv/${chatter.channel.replace("#", "")}`);
                             embed.setThumbnail(guild.iconURL);
 
-                            if (chatter.hasOwnProperty("badges") && chatter.badges.broadcaster === 1) {
-                                embed.setAuthor(chatter.username, "https://cdn.joejiko.com/img/discord/winner.png");
-                                embed.setColor(8467967); // purple
+                            if (chatter.hasOwnProperty("badges") && chatter.badges) {
+                                if (chatter.badges.broadcaster === 1) {
+                                    embed.setAuthor(chatter.username, "https://cdn.joejiko.com/img/discord/winner.png");
+                                    embed.setColor(8467967); // purple
+                                }
                             }
                             else if (chatter.mod) {
                                 embed.setAuthor(chatter.username, "https://cdn.joejiko.com/img/discord/moderator.png");
@@ -77,6 +79,7 @@ module.exports = function (bot) {
                                 embed.setColor(65280); // green
                             }
                             else {
+                                embed.setAuthor(chatter.username);
                                 embed.setColor(49139); // blue
                             }
                             embed.setFooter(`${chatter.channel}`, "https://cdn.joejiko.com/img/discord/twitch_favicon-0.png");
