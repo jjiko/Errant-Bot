@@ -2,7 +2,6 @@ require('dotenv').load();
 
 const RhythmBot = require('./src/rhythm-bot.js');
 const logger = require('./src/logger.js');
-
 const bot = new RhythmBot({
     command: {
         symbol: process.env.SYMBOL // command symbol trigger
@@ -33,7 +32,12 @@ bot.connect()
     .then(() => {
         logger.log('Listening');
         bot.listen();
+
+        // Start Twitch chatbot
         bot.twitch.listen();
+
+        // Start WebSocket server
+        bot.wss.listen();
 
         // Done
         process.send('ready');

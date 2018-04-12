@@ -69,6 +69,10 @@ module.exports = function (bot) {
                                     embed.setAuthor(chatter.username, "https://cdn.joejiko.com/img/discord/winner.png");
                                     embed.setColor(8467967); // purple
                                 }
+                                else {
+                                    embed.setAuthor(chatter.username);
+                                    embed.setColor(49139); // blue
+                                }
                             }
                             else if (chatter.mod) {
                                 embed.setAuthor(chatter.username, "https://cdn.joejiko.com/img/discord/moderator.png");
