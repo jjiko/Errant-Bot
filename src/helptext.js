@@ -1,6 +1,5 @@
 const __ = require('iterate-js');
 const Discord = require('discord.js');
-const logger = require('./logger.js');
 const help = [
     {
         title: [":hash:", "Channel"],

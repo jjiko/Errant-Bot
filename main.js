@@ -1,30 +1,13 @@
 require('dotenv').load();
 
-const RhythmBot = require('./src/rhythm-bot.js');
+const ErrantBot = require('./src/errant-bot.js');
 const logger = require('./src/logger.js');
-const bot = new RhythmBot({
+const bot = new ErrantBot({
     command: {
         symbol: process.env.SYMBOL // command symbol trigger
     },
-    // @todo move to database
-    twitch: {
-        watch: [{
-            channel: "jjiko",
-            discord: {
-                guild: "Errant Nights",
-                channel: "streaming"
-            }
-        }]
-    },
     discord: {
-        token: process.env.DISCORD_TOKEN, //,
-        join: "music"
-        // manage: {
-        //     channels: [ 
-        //         // Example text channel manager, limits media channel to 5 posts, limit should probably be less than 100 to avoid bugs
-        //         { name: 'media', limit: 5 }  
-        //     ]
-        // }
+        token: process.env.DISCORD_TOKEN
     }
 });
 

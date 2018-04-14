@@ -156,7 +156,7 @@ module.exports = function (bot) {
 
 To enable role management, drag the ${process.env.ROLE} permission to the top of your role list.
 
-Say \`${bot.config.SYMBOL}help\` to see a list of available commands.
+Say \`${bot.config.command.symbol}help\` to see a list of available commands.
 
 Thanks for adding me to your guild!
 

@@ -36,5 +36,6 @@ module.exports = function (bot, config) {
             volumeWhileSpeaking: 0.6
         })
     });
+    // Replaces defaults with config options passed on init
     bot.config.update(config);
 };
