@@ -40,8 +40,8 @@ const help = [
     {
         title: [":heavy_plus_sign:", "More commands"],
         commands: [
-            '{PRE}ping: Check if the bot is online',
-            '{PRE}invite: Generate invite link for bot',
+            // '{PRE}ping: Check if the bot is online',
+            '{PRE}invite: Generate invite link to add this bot to your guild',
             '{PRE}status: show bot stats'
         ]
     }

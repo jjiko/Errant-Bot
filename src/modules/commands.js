@@ -37,21 +37,30 @@ module.exports = function (bot) {
                 });
         },
 
+        /** Get info about various things from the API **/
+        info: msg => {
+            if (msg.meta[1] === "guild") {
+                msg.channel.send(`\`${msg.guild.name}\`\t#${msg.guild.id}\t\`Members: \`\t${msg.guild.memberCount}
+                Roles: `);
+            }
+        },
+
         status: msg => {
             const embed = new Discord.RichEmbed();
 
-            embed.setTitle("Errant Bot 📜 Status");
+            embed.setTitle(`📜 ${msg.guild.me.user.username}#${msg.guild.me.user.discriminator}`);
             embed.setColor(8467967);
             embed.setAuthor(msg.author.username, msg.author.avatarURL);
-            embed.setDescription(`Bot's status in the world`);
+            embed.setDescription(`\`ID: \` ${msg.guild.me.id}
+\`Created: \`\t${moment(msg.guild.me.user.createdTimestamp).fromNow()}
 
-            embed.addField("Ping", Math.round(msg.client.ping), true);
-            embed.addField("Uptime", moment.duration(msg.client.uptime, "seconds").humanize(), true);
-            embed.addField("Guilds", msg.client.guilds.size, true);
-            embed.addField("Text", (msg.client.channels.size - msg.client.voiceConnections.size), true);
-            embed.addField("Voice", msg.client.voiceConnections.size, true);
-            embed.addField("Total", msg.client.channels.size, true);
+__**Connection**__
 
+\`Ping:\`\t${Math.round(msg.client.ping)}\t\`Uptime:\`\t${moment.duration(msg.client.uptime).humanize()}
+    
+__**Stats**__
+
+\`Guilds:\`\t${msg.client.guilds.size}\t\`Text channels:\`\t${(msg.client.channels.size - msg.client.voiceConnections.size)}\t\`Voice channels: \`\t${msg.client.voiceConnections.size}\t\`Total: \`\t${msg.client.channels.size}`);
             msg.channel.send({embed});
         },
 
@@ -115,7 +124,9 @@ module.exports = function (bot) {
                             embed.addField("Now Playing", t.stream.game);
                             embed.addField("Stream Title", t.stream.channel.status);
                             embed.addField("Followers", t.stream.channel.followers);
-                            embed.addField("Viewers", t.stream.viewers, true);
+                            if (t.stream.viewers > 0) {
+                                embed.addField("Viewers", t.stream.viewers, true);
+                            }
                             embed.addField("Total Views", t.stream.channel.views, true);
                             embed.setImage(t.stream.channel.profile_banner);
                             embed.setFooter("Streaming since");

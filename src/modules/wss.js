@@ -32,8 +32,7 @@ const format = {
         tags.forEach(tag => {
             const split_tag = tag.split('=');
             const name = format.tagName(split_tag[0]);
-            let val = format.tagVal(split_tag[1]);
-            tagObject[name] = val;
+            tagObject[name] = format.tagVal(split_tag[1]);
         });
 
         if (tagObject.data) {
@@ -59,6 +58,7 @@ module.exports = function (bot) {
             this.wss.on('connection', ws => {
 
                 ws.on('message', msg => {
+                    logger.log(`Message received: ${msg}`);
                     if (msg.includes("ACTIVITY ")) {
                         let event = msg.split("ACTIVITY ")[1];
                         let parsed = format.tags(event);

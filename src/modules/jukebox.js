@@ -1,14 +1,8 @@
 
 const __ = require('iterate-js');
 const youtube = require('ytdl-core');
-const spotify = require('../services/spotify.js');
 
 const infohandlers = {
-
-    spotify: function(search, cb) {
-        let uri = search.split(':')[1];
-        spotify.getInfo(uri, cb);
-    },
 
     youtube: function(search, cb) {
         let url = search.contains('://') ? search : 'https://www.youtube.com/watch?v=' + search;
@@ -18,11 +12,6 @@ const infohandlers = {
 };
 
 const handlers = {
-
-    spotify: function(bot, msg, track) {
-        let uri = track.search.split(':')[1];
-        track.dispatcher = msg.guild.voiceConnection.playStream(spotify(bot, uri), bot.config.stream);
-    },
 
     youtube: function(bot, msg, track) {
         let url = track.search.contains('://') ? track.search : 'https://www.youtube.com/watch?v=' + track.search;
